@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "isim": "aziz",
+    "puan": "60",
+    "ders": "matematik"
+  },
+  {
+    "id": 2,
+    "isim": "mehmet",
+    "puan": "50",
+    "ders": "cografya"
+  },
+  {
+    "id": 3,
+    "isim": "ahmet",
+    "puan": "40",
+    "ders": "matematik"
+  },
+  {
+    "id": 4,
+    "isim": "ali",
+    "puan": "100",
+    "ders": "matematik"
+  },
+  {
+    "id": 4,
+    "isim": "ali",
+    "puan": "100",
+    "ders": "matematik"
+  },
+  {
+    "id": 4,
+    "isim": "ali",
+    "puan": "100",
+    "ders": "matematik"
+  },
+  {
+    "id": 10,
+    "isim": "veli",
+    "puan": "100",
+    "ders": "matematik"
+  }
+]
