@@ -1,5 +1,11 @@
 import createHttpError from 'http-errors';
-import { getOgrenci, getOgrenciler } from '../services/ogrenciler.js';
+import {
+  getOgrenci,
+  getOgrenciler,
+  ogrenciGuncelle,
+  ogrenciOlustur,
+  ogrenciSil,
+} from '../services/ogrenciler.js';
 
 export const getOgrencilerController = async (req, res) => {
   const data = await getOgrenciler();
@@ -21,5 +27,73 @@ export const getOgrenciController = async (req, res) => {
   res.status(200).send({
     mesaj: 'öğrenci datası',
     data: data,
+  });
+};
+
+export const ogrenciEkleController = async (req, res) => {
+  const gelenData = req.body;
+  const data = await ogrenciOlustur(gelenData);
+  res.status(201).send({
+    mesaj: 'öğrenci oluşturuldu',
+    data: data,
+  });
+};
+
+export const ogrenciSilController = async (req, res) => {
+  const ogrenciId = req.params.ogrenciId;
+  const data = await ogrenciSil(ogrenciId);
+  res.status(200).send({
+    mesaj: 'öğrenci silindi',
+    data: data,
+  });
+};
+
+export const ogrenciPutGuncelleController = async (req, res) => {
+  const ogrenciId = req.params.ogrenciId;
+  const ogrenciData = req.body;
+
+  const guncelleData = await ogrenciGuncelle(ogrenciId, ogrenciData, {
+    upsert: true,
+  });
+
+  if (!guncelleData) {
+    throw createHttpError({
+      message: 'hata oluştu',
+    });
+  }
+
+  const durum = guncelleData.yenimi ? 201 : 200;
+  const mesaj = guncelleData.yenimi
+    ? 'öğrenci oluşturuldu'
+    : 'öğrenci güncellendi';
+
+  res.status(durum).send({
+    mesaj: mesaj,
+    data: guncelleData.ogrenci,
+  });
+};
+
+export const ogrenciPatchGuncelleController = async (req, res) => {
+  const ogrenciId = req.params.ogrenciId;
+  const ogrenciData = req.body;
+
+  const guncelleData = await ogrenciGuncelle(ogrenciId, ogrenciData, {
+    upsert: false,
+  });
+
+  if (!guncelleData) {
+    throw createHttpError({
+      message: 'hata oluştu',
+    });
+  }
+
+  const durum = guncelleData.yenimi ? 201 : 200;
+  const mesaj = guncelleData.yenimi
+    ? 'öğrenci oluşturuldu'
+    : 'öğrenci güncellendi';
+
+  res.status(durum).send({
+    mesaj: mesaj,
+    data: guncelleData.ogrenci,
   });
 };
