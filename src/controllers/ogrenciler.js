@@ -19,10 +19,7 @@ export const getOgrenciController = async (req, res) => {
   const ogrenciId = req.params.ogrenciId;
   const data = await getOgrenci(ogrenciId);
   if (!data) {
-    throw createHttpError({
-      message: 'öğrenci bulunamadı',
-      status: 404,
-    });
+    throw createHttpError(404, 'öğrenci bulunamadı');
   }
   res.status(200).send({
     mesaj: 'öğrenci datası',
