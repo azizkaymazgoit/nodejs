@@ -1,8 +1,55 @@
+import { DEFAULT_PAGINATION_VALUES } from '../constants/pagination.js';
 import Ogrenciler from '../db/models/ogrenciler.js';
+import { calculatePaginationdata } from '../utils/calculatePaginationdata.js';
 
-export const getOgrenciler = async () => {
-  const data = await Ogrenciler.find();
-  return data;
+export const getOgrenciler = async (
+  page = DEFAULT_PAGINATION_VALUES.page,
+  perPage = DEFAULT_PAGINATION_VALUES.perPage,
+  sortBy = DEFAULT_PAGINATION_VALUES.sortBy,
+  sortOrder = DEFAULT_PAGINATION_VALUES.sortOrder,
+  filter = {},
+) => {
+  // page
+  // limit
+
+  // 1.sayfada 5 limit data
+  // 0,1,2,3,4
+
+  // 4.sayfada 5 limit data
+  // 0...19 20.
+
+  const skip = (page - 1) * perPage;
+  const limit = perPage;
+
+  const ogrenciQuery = Ogrenciler.find();
+
+  // koşullar
+  if (filter.gender) {
+    ogrenciQuery.where('gender').eq(filter.gender);
+  }
+
+  if (filter.minAge) {
+    ogrenciQuery.where('age').gte(filter.minAge);
+  }
+
+  if (filter.maxAge) {
+    ogrenciQuery.where('age').lte(filter.maxAge);
+  }
+
+  const totalData = await Ogrenciler.countDocuments(ogrenciQuery.getQuery());
+
+  const data = await ogrenciQuery
+    .skip(skip)
+    .limit(limit)
+    .sort({ [sortBy]: sortOrder })
+    .exec();
+
+  const pagination = calculatePaginationdata(totalData, page, perPage);
+
+  return {
+    data,
+    pagination,
+  };
 };
 
 export const getOgrenci = async (id) => {

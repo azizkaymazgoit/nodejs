@@ -6,9 +6,20 @@ import {
   ogrenciOlustur,
   ogrenciSil,
 } from '../services/ogrenciler.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getOgrencilerController = async (req, res) => {
-  const data = await getOgrenciler();
+  const queryParams = req.query;
+
+  const { page, perPage } = parsePaginationParams(queryParams);
+
+  const { sortBy, sortOrder } = parseSortParams(queryParams);
+
+  const filter = parseFilterParams(queryParams);
+
+  const data = await getOgrenciler(page, perPage, sortBy, sortOrder, filter);
   res.status(200).send({
     mesaj: 'tüm öğrencilerin listesi',
     data: data,
