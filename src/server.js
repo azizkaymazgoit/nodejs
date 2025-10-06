@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import ogrenciRouter from './routers/ogrenciler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import AuthRouter from './routers/auth.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -20,11 +22,15 @@ export const createServer = () => {
     }),
   );
 
+  app.use(cookieParser());
+
   app.get('/', (req, res) => {
     res.send('Anasayfa');
   });
 
   app.use('/ogrenciler', ogrenciRouter);
+
+  app.use('/auth', AuthRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
