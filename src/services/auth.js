@@ -38,6 +38,8 @@ export const loginUser = async (userData) => {
     throw createHttpError(400, 'Şifre Yanlış');
   }
 
+  await SessionsCollection.deleteMany({ userId: user._id });
+
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
@@ -51,6 +53,39 @@ export const loginUser = async (userData) => {
     accessTokenValidUntil,
     refreshTokenValidUntil,
   });
+
+  return sessionData;
+};
+
+export const logoutUser = async (sessionId) => {
+  await SessionsCollection.findByIdAndDelete(sessionId);
+};
+
+export const refreshUser = async (refreshToken, sessionId) => {
+  const session = await SessionsCollection.findById(sessionId);
+  if (!session) {
+    throw createHttpError(404, 'Oturum bulunmadı');
+  }
+
+  if (session.refreshTokenValidUntil < Date.now()) {
+    throw createHttpError(400, 'Refreshtoken süresi bitmiş');
+  }
+
+  const accessTokenNew = randomBytes(30).toString('base64');
+  const refreshTokenNew = randomBytes(30).toString('base64');
+
+  const accessTokenValidUntilNew = new Date(Date.now() + ACCESS_TOKEN_TIME);
+  const refreshTokenValidUntilNew = new Date(Date.now() + REFRESH_TOKEN_TIME);
+
+  const sessionData = await SessionsCollection.create({
+    userId: session.userId,
+    accessToken: accessTokenNew,
+    refreshToken: refreshTokenNew,
+    accessTokenValidUntil: accessTokenValidUntilNew,
+    refreshTokenValidUntil: refreshTokenValidUntilNew,
+  });
+
+  await SessionsCollection.findByIdAndDelete(sessionId);
 
   return sessionData;
 };
