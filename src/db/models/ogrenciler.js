@@ -19,6 +19,10 @@ const ogrenciSchema = new Schema(
       type: Number,
       required: true,
     },
+    photo: {
+      type: String,
+      default: null,
+    },
     onDuty: {
       type: Boolean,
       required: true,

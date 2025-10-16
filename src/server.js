@@ -6,6 +6,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import AuthRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
+import { UPLOADS_FOLDER } from './constants/index.js';
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ export const createServer = () => {
   app.use('/ogrenciler', ogrenciRouter);
 
   app.use('/auth', AuthRouter);
+
+  app.use('/uploads', express.static(UPLOADS_FOLDER));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

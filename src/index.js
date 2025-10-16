@@ -1,14 +1,14 @@
+import { TEMP_FOLDER, UPLOADS_FOLDER } from './constants/index.js';
 import initMongoDB from './db/initMongoDB.js';
 import { createServer } from './server.js';
 
+import { createFileIfNotExist } from './utils/createFileIfNotExist.js';
+
 const main = async () => {
   await initMongoDB();
+  await createFileIfNotExist(TEMP_FOLDER);
+  await createFileIfNotExist(UPLOADS_FOLDER);
   createServer();
 };
 
 main();
-
-
-// aziz22 - teacher - 68e6c8b602acebd663152bab
-
-// aziz23 - parent - 68e6c8fde983c2bde1e900c1

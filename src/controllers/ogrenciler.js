@@ -10,6 +10,9 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
+// import { saveFileUpload } from '../utils/saveFileUpload.js';
+import { saveFileCloud } from '../utils/saveFileCloud.js';
+
 export const getOgrencilerController = async (req, res) => {
   const queryParams = req.query;
 
@@ -40,7 +43,17 @@ export const getOgrenciController = async (req, res) => {
 
 export const ogrenciEkleController = async (req, res) => {
   const gelenData = req.body;
-  const data = await ogrenciOlustur(gelenData);
+
+  const photo = req.file;
+
+  let photoUrl;
+
+  if (photo) {
+    // photoUrl = await saveFileUpload(photo);
+    photoUrl = await saveFileCloud(photo);
+  }
+
+  const data = await ogrenciOlustur({ ...gelenData, photo: photoUrl });
   res.status(201).send({
     mesaj: 'öğrenci oluşturuldu',
     data: data,

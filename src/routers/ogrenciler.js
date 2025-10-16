@@ -18,6 +18,8 @@ import { authorization } from '../middlewares/authorization.js';
 import { checkRoles } from '../middlewares/checkRoles.js';
 import { USER_ROLES } from '../constants/index.js';
 
+import { upload } from '../middlewares/uplaod.js';
+
 const ogrenciRouter = Router();
 
 ogrenciRouter.use(authorization);
@@ -31,6 +33,12 @@ ogrenciRouter.get(
 ogrenciRouter.post(
   '/',
   checkRoles(USER_ROLES.TEACHER),
+  upload.single('photo'),
+  /*  upload.array('photos', 3),
+  upload.fields({
+    photo: {maxcount: 1},
+    photos: {maxcount: 10}
+  }), */
   validateBody(ogenciEkleSchema),
   controllerWrapper(ogrenciEkleController),
 );
